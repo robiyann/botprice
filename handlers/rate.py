@@ -1,16 +1,13 @@
 from pyrogram import filters
 from pyrogram.types import Message
-from bot import app
+from bot import app  # BOLEH karena __name__ == "__main__" aman
 from mappings import symbol_to_id, vs_currency_mapping
 import requests
 import logging
 
 def get_price(coin_id, vs_currency):
     url = "https://api.coingecko.com/api/v3/simple/price"
-    params = {
-        'ids': coin_id,
-        'vs_currencies': vs_currency
-    }
+    params = {'ids': coin_id, 'vs_currencies': vs_currency}
     response = requests.get(url, params=params)
     data = response.json()
     return data.get(coin_id, {}).get(vs_currency, 0)
@@ -20,18 +17,14 @@ def rate_handler(client, message: Message):
     try:
         args = message.text.split()
 
-        # Kasus: /rate 10 usdt idr
         if len(args) == 4:
             jumlah_token = float(args[1])
             coin_symbol = args[2].lower()
             vs_currency_symbol = args[3].lower()
-
-        # Kasus: /rate 10 usdt (default ke IDR)
         elif len(args) == 3:
             jumlah_token = float(args[1])
             coin_symbol = args[2].lower()
             vs_currency_symbol = "idr"
-
         else:
             message.reply("Format salah! Contoh: /rate 10 usdt idr")
             return
