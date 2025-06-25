@@ -2,9 +2,12 @@ from pyrogram import filters
 from bot import app
 from mappings import symbol_to_id, vs_currency_mapping
 import requests
+import logging
+
+logger = logging.getLogger()
 
 def get_price(coin_id, vs_currency):
-    url = f"https://api.coingecko.com/api/v3/simple/price"
+    url = "https://api.coingecko.com/api/v3/simple/price"
     params = {
         'ids': coin_id,
         'vs_currencies': vs_currency
@@ -13,8 +16,10 @@ def get_price(coin_id, vs_currency):
     data = response.json()
     return data.get(coin_id, {}).get(vs_currency, 0)
 
-@app.on_message(filters.command("rate") & (filters.chat_type.groups | filters.chat_type.private))
+@app.on_message(filters.command("rate") & filters.chat())
 def rate_handler(client, message):
+    logger.info("==> Handler /rate called by user_id=%s chat_id=%s", message.from_user.id if message.from_user else "?", message.chat.id)
+
     try:
         args = message.text.split()
         if len(args) != 4:
@@ -35,4 +40,5 @@ def rate_handler(client, message):
         message.reply(reply_text)
 
     except Exception as e:
+        logger.exception("Error in /rate handler: %s", e)
         message.reply(f"Terjadi error: {str(e)}")

@@ -1,54 +1,44 @@
+import os
 import logging
-import sys
 from pyrogram import Client
-import handlers.rate  # Load handler
-# Kalau ada help / ping: import juga
-# import handlers.help
-# import handlers.ping
+import handlers.ping
+import handlers.help
+import handlers.rate
+import config
 
-# Load config
-from config import api_id, api_hash, bot_token
+# Setup logging
+LOG_FILE = "log.txt"
+if os.path.exists(LOG_FILE):
+    os.remove(LOG_FILE)
 
-# === SETUP LOGGING ===
-log_file = "log.txt"
-
-# Reset log.txt
-with open(log_file, "w") as f:
-    f.write("=== Simple Rate Bot Log Started ===\n")
-
-# Setup logging ke file
 logging.basicConfig(
-    level=logging.DEBUG,  # Bisa ganti INFO kalau mau
+    level=logging.DEBUG,  # bisa diganti INFO jika mau lebih singkat
     format="%(asctime)s - %(levelname)s - %(message)s",
     handlers=[
-        logging.FileHandler(log_file, mode='a'),
-        logging.StreamHandler(sys.stdout)
+        logging.FileHandler(LOG_FILE),
+        logging.StreamHandler()
     ]
 )
 
 logger = logging.getLogger()
 
-# === START BOT ===
-logger.info("=== Simple Rate Bot Starting ===")
-
+# Create Pyrogram Client
 app = Client(
     "simple_rate_bot",
-    api_id=api_id,
-    api_hash=api_hash,
-    bot_token=bot_token
+    api_id=config.api_id,
+    api_hash=config.api_hash,
+    bot_token=config.bot_token
 )
 
-# === RUN ===
+# Main loop
 if __name__ == "__main__":
     try:
-        logger.info("Connecting to Telegram API...")
-        app.start()
-        logger.info("Bot connected!")
-        print("✅ Bot ready. Waiting for commands...")
-
-        app.idle()  # keep running
+        logger.info("=== Simple Rate Bot Starting ===")
+        with app:
+            logger.info("Bot connected!")
+            print("✅ Bot ready. Waiting for commands...")
+            app.run()
     except Exception as e:
         logger.exception("Bot stopped due to error: %s", e)
     finally:
-        app.stop()
         logger.info("Bot stopped. Exiting.")
