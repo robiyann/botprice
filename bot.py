@@ -1,5 +1,3 @@
-# bot.py
-
 import logging
 from pyrogram import Client
 from config import api_id, api_hash, bot_token
@@ -9,23 +7,30 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
     handlers=[
-        logging.FileHandler("log.txt", mode="w"),
+        logging.FileHandler("log.txt", mode='w'),  # hapus & buat baru
         logging.StreamHandler()
     ]
 )
 
-# Init bot client
+# Create app
 app = Client("simple_rate_bot", api_id=api_id, api_hash=api_hash, bot_token=bot_token)
 
-# Register handlers
-from handlers.ping import register_ping
-from handlers.help import register_help
-from handlers.rate import register_rate
+# Import handlers
+import handlers.ping
+import handlers.help
+import handlers.rate
 
-register_ping(app)
-register_help(app)
-register_rate(app)
+# Start bot
+logging.info("=== Simple Rate Bot Starting ===")
+app.start()
+logging.info("Bot connected!")
+print("✅ Bot ready. Waiting for commands...")
 
-# Run bot
-logging.info("✅ Bot connected! Waiting for commands...")
-app.run()
+# Keep running
+try:
+    app.run()
+except Exception as e:
+    logging.error(f"Bot stopped due to error: {e}")
+
+app.stop()
+logging.info("Bot stopped. Exiting.")
