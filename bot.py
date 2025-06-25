@@ -1,3 +1,9 @@
+import logging
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+
 from pyrogram import Client
 from config import api_id, api_hash, bot_token
 
@@ -8,7 +14,7 @@ app = Client(
     bot_token=bot_token
 )
 
-# Import handlers
+# Import handlers (sesuai folder Anda: botprice/handlers/*.py)
 import handlers.rate
 import handlers.help
 import handlers.ping
