@@ -1,6 +1,5 @@
 import logging
 import os
-
 from pyrogram import Client
 from config import api_id, api_hash, bot_token
 
@@ -22,7 +21,9 @@ app = Client("simple_rate_bot", api_id=api_id, api_hash=api_hash, bot_token=bot_
 # Load handlers
 import handlers.ping
 import handlers.help
-import handlers.rate
+from handlers import rate
+
+rate.register(app)
 
 if __name__ == "__main__":
     logging.info("=== Simple Rate Bot Starting ===")
