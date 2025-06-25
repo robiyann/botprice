@@ -22,7 +22,7 @@ import handlers.rate
 
 # Start bot
 logging.info("=== Simple Rate Bot Starting ===")
-app.start()
+app.run()
 logging.info("Bot connected!")
 print("✅ Bot ready. Waiting for commands...")
 
