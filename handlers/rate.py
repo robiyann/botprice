@@ -13,7 +13,7 @@ def get_price(coin_id, vs_currency):
     data = response.json()
     return data.get(coin_id, {}).get(vs_currency, 0)
 
-@app.on_message(filters.command("rate") & (filters.private | filters.group))
+@app.on_message(filters.command("rate") & (filters.chat_type.groups | filters.chat_type.private))
 def rate_handler(client, message):
     try:
         args = message.text.split()
